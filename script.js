@@ -16,7 +16,7 @@ window.onscroll = () => {
   }
 };
 
-const WHATSAPP_NUMBER = "5491112345678"; // Cambiar acá
+const WHATSAPP_NUMBER = "5359805123"; // Cambiar acá
 
 // Función para extraer nombre, precio y tamaño
 function parseFileName(fileName) {
