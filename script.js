@@ -18,46 +18,28 @@ window.onscroll = () => {
 };
 
 // Número de WhatsApp (cambiar por el número real)
-const WHATSAPP_NUMBER = "5491112345678"; // Cambiar acá
+const WHATSAPP_NUMBER = "5359805123"; // Cambiar acá
 
 // Función para extraer nombre, precio y tamaño del nombre del archivo
-// Formato esperado: "Nombre del producto, precio, tamaño.ext"
+// Formato esperado: "Nombre_del_producto_precio_tamaño.ext"
 function parseFileName(fileName) {
   // Eliminar la extensión
   const sinExtension = fileName.replace(/\.[^/.]+$/, "");
 
-  // Buscar patrón con comas: algo, número, número
-  // Ejemplo: "Gorrito Pompón,1500,22"
-  const match = sinExtension.match(/^(.+),(\d+),(\d+)$/);
+  // Buscar patrón con guiones bajos: nombre_precio_tamaño
+  const partes = sinExtension.split("_");
 
-  if (match) {
-    const nombre = match[1].trim();
-    const precio = match[2];
-    const tamaño = match[3];
+  if (partes.length >= 3) {
+    // La última parte es tamaño, penúltima es precio, el resto es el nombre
+    const tamaño = partes[partes.length - 1];
+    const precio = partes[partes.length - 2];
+    const nombre = partes.slice(0, -2).join(" ");
     return { nombre, precio, tamaño };
   }
 
-  // Intentar con espacios después de comas: "Gorrito Pompón, 1500, 22"
-  const matchEspacios = sinExtension.match(/^(.+),\s*(\d+),\s*(\d+)$/);
-  if (matchEspacios) {
-    const nombre = matchEspacios[1].trim();
-    const precio = matchEspacios[2];
-    const tamaño = matchEspacios[3];
-    return { nombre, precio, tamaño };
-  }
-
-  // Si no hay comas, intentar con guiones bajos (backward compatibility)
-  const matchUnderscore = sinExtension.match(/^(.+)_(\d+)_(\d+)$/);
-  if (matchUnderscore) {
-    const nombre = matchUnderscore[1].replace(/_/g, " ");
-    const precio = matchUnderscore[2];
-    const tamaño = matchUnderscore[3];
-    return { nombre, precio, tamaño };
-  }
-
-  // Formato no reconocido - mostrar como está
+  // Si no tiene el formato esperado, mostrar como está
   return {
-    nombre: sinExtension.replace(/[_,]/g, " "),
+    nombre: sinExtension.replace(/_/g, " "),
     precio: "consultar",
     tamaño: "estándar",
   };
@@ -175,7 +157,7 @@ async function cargarProductos() {
             <img src="${producto.path}" alt="${producto.nombre}" loading="lazy" onerror="this.src='https://placehold.co/400x300/ffcfb6/white?text=📷+Imagen+no+encontrada'">
             <div class="product-info">
                 <h3>${producto.nombre}</h3>
-                <div class="price">💰 $${producto.precio} <small>MXN</small></div>
+                <div class="price">💰 $${producto.precio} <small>CUP</small></div>
                 <div class="size">📏 Tamaño: ${producto.tamaño} cm</div>
                 <button class="whatsapp-btn" data-nombre="${producto.nombre.replace(/'/g, "\\'")}" data-precio="${producto.precio}" data-tamaño="${producto.tamaño}">
                     <i class='bx bxl-whatsapp'></i> Comprar por WhatsApp
@@ -192,7 +174,7 @@ async function cargarProductos() {
       const nombre = btn.dataset.nombre;
       const precio = btn.dataset.precio;
       const tamaño = btn.dataset.tamaño;
-      const mensaje = `Hola, quiero comprar *${nombre}* 🧶%0APrecio: $${precio} MXN%0ATamaño: ${tamaño} cm%0A¿Tienen stock?`;
+      const mensaje = `Hola, quiero comprar *${nombre}* 🧶%0APrecio: $${precio} CUP%0ATamaño: ${tamaño} cm%0A¿Tienen stock?`;
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`, "_blank");
     });
   });
