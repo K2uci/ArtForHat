@@ -1,3 +1,6 @@
+// script.js - VERSIÓN OPTIMIZADA
+const WHATSAPP_NUMBER = "5359805123";
+
 // Menu mobile
 const menuIcon = document.querySelector("#menu-icon");
 const navbar = document.querySelector(".navbar");
@@ -16,9 +19,7 @@ window.onscroll = () => {
   }
 };
 
-const WHATSAPP_NUMBER = "5359805123"; // Cambiar acá
-
-// Función para extraer nombre, precio y tamaño
+// Función optimizada para parsear nombres de archivo
 function parseFileName(fileName) {
   const sinExtension = fileName.replace(/\.[^/.]+$/, "");
   const partes = sinExtension.split("_");
@@ -37,131 +38,93 @@ function parseFileName(fileName) {
   };
 }
 
-// Función para cargar productos desde JSON
+// ✅ Función OPTIMIZADA - carga inmediata sin verificar cada imagen
 async function cargarProductos() {
   const container = document.getElementById("products-container");
   if (!container) return;
 
   container.innerHTML = `
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>🔍 Cargando productos...</p>
-        </div>
-    `;
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>🔍 Cargando productos...</p>
+    </div>
+  `;
 
   try {
-    // Usar ruta relativa correcta para GitHub Pages
     const response = await fetch("./src/productos.json");
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}: No se pudo cargar productos.json`,
-      );
+      throw new Error(`No se pudo cargar productos.json`);
     }
 
     const data = await response.json();
 
     if (!data.imagenes || data.imagenes.length === 0) {
-      container.innerHTML = `
-                <div class="loading-spinner" style="grid-column:1/-1; text-align:center;">
-                    <p>📁 No hay productos en el catálogo</p>
-                    <p style="font-size:0.9rem;">Agrega imágenes a la carpeta /src/ y actualiza productos.json</p>
-                </div>
-            `;
+      container.innerHTML = `<div class="loading-spinner"><p>📁 No hay productos en el catálogo</p></div>`;
       return;
     }
 
     container.innerHTML = "";
-    let productosCargados = 0;
 
-    for (const imgNombre of data.imagenes) {
+    // ✅ Carga DIRECTA sin verificación lenta
+    data.imagenes.forEach((imgNombre) => {
       const imgPath = `./src/${imgNombre}`;
-      const existe = await imagenExiste(imgPath);
+      const { nombre, precio, tamaño } = parseFileName(imgNombre);
 
-      if (existe) {
-        const { nombre, precio, tamaño } = parseFileName(imgNombre);
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${imgPath}" 
+             alt="${nombre}" 
+             loading="lazy"
+             onerror="this.src='https://placehold.co/400x300/ffcfb6/white?text=📷+Error+de+carga'">
+        <div class="product-info">
+          <h3>${nombre.replace(/_/g, " ")}</h3>
+          <div class="price">💰 $${precio} <small>CUP</small></div>
+          <div class="size">📏 Tamaño: ${tamaño} cm</div>
+          <button class="whatsapp-btn" 
+                  data-nombre="${nombre.replace(/'/g, "\\'")}" 
+                  data-precio="${precio}" 
+                  data-tamaño="${tamaño}">
+            <i class='bx bxl-whatsapp'></i> Comprar por WhatsApp
+          </button>
+        </div>
+      `;
 
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-                    <img src="${imgPath}" alt="${nombre}" loading="lazy" onerror="this.src='https://placehold.co/400x300/ffcfb6/white?text=📷+Error+de+carga'">
-                    <div class="product-info">
-                        <h3>${nombre}</h3>
-                        <div class="price">💰 $${precio} <small>CUP</small></div>
-                        <div class="size">📏 Tamaño: ${tamaño} cm</div>
-                        <button class="whatsapp-btn" data-nombre="${nombre.replace(/'/g, "\\'")}" data-precio="${precio}" data-tamaño="${tamaño}">
-                            <i class='bx bxl-whatsapp'></i> Comprar por WhatsApp
-                        </button>
-                    </div>
-                `;
+      container.appendChild(card);
 
-        container.appendChild(card);
-        productosCargados++;
-
-        const btn = card.querySelector(".whatsapp-btn");
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const nombreProd = btn.dataset.nombre;
-          const precioProd = btn.dataset.precio;
-          const tamañoProd = btn.dataset.tamaño;
-          const mensaje = `Hola, quiero comprar *${nombreProd}* 🧶%0APrecio: $${precioProd} CUP%0ATamaño: ${tamañoProd} cm%0A¿Tienen stock?`;
-          window.open(
-            `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`,
-            "_blank",
-          );
-        });
-      } else {
-        console.log(`Imagen no encontrada: ${imgPath}`);
-      }
-    }
-
-    if (productosCargados === 0) {
-      container.innerHTML = `
-                <div class="loading-spinner" style="grid-column:1/-1; text-align:center;">
-                    <p>⚠️ No se encontraron las imágenes</p>
-                    <p style="font-size:0.9rem;">Verifica que los archivos existan en /src/ con los nombres exactos:</p>
-                    <pre style="text-align:left; display:inline-block; margin-top:1rem; background:#f5f5f5; padding:1rem; border-radius:8px;">${data.imagenes.join("\n")}</pre>
-                </div>
-            `;
-    } else {
-      // Agregar contador
-      const contador = document.createElement("div");
-      contador.style.cssText =
-        "grid-column:1/-1; text-align:center; margin-top:2rem; font-size:0.9rem; color:#7a6a5c;";
-      contador.innerHTML = `✨ Mostrando ${productosCargados} producto(s) ✨`;
-      container.appendChild(contador);
-    }
+      const btn = card.querySelector(".whatsapp-btn");
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const mensaje = `Hola, quiero comprar *${btn.dataset.nombre}* 🧶%0APrecio: $${btn.dataset.precio} CUP%0ATamaño: ${btn.dataset.tamaño} cm%0A¿Tienen stock?`;
+        window.open(
+          `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`,
+          "_blank",
+        );
+      });
+    });
   } catch (error) {
     console.error("Error:", error);
     container.innerHTML = `
-            <div class="loading-spinner" style="grid-column:1/-1; text-align:center;">
-                <p>❌ Error al cargar productos</p>
-                <p style="font-size:0.9rem;">Verifica que el archivo <strong>src/productos.json</strong> existe</p>
-                <p style="font-size:0.8rem; color:#7a6a5c;">Detalle técnico: ${error.message}</p>
-                <button onclick="cargarProductos()" class="btn" style="margin-top:1rem;">🔄 Reintentar</button>
-            </div>
-        `;
+      <div class="loading-spinner">
+        <p>❌ Error al cargar productos</p>
+        <p style="font-size:0.9rem;">Verifica que el archivo <strong>src/productos.json</strong> tenga el formato correcto</p>
+        <button onclick="cargarProductos()" class="btn" style="margin-top:1rem;">🔄 Reintentar</button>
+      </div>
+    `;
   }
 }
 
-function imagenExiste(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = url;
-  });
-}
-
+// Configurar botones de WhatsApp y redes sociales
 function setupWhatsAppButtons() {
   const customOrderBtn = document.getElementById("customOrderBtn");
   if (customOrderBtn) {
     customOrderBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      const mensaje =
-        "Hola, quiero hacer un *pedido personalizado* en Arte ForHat 🧶";
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`, "_blank");
+      window.open(
+        `https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20hacer%20un%20*pedido%20personalizado*%20en%20Arte%20ForHat%20🧶`,
+        "_blank",
+      );
     });
   }
 
