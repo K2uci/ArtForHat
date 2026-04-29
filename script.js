@@ -156,7 +156,7 @@ function setupSocialLinks() {
   if (instagramLink) {
     instagramLink.addEventListener("click", (e) => {
       e.preventDefault();
-      window.open("https://www.instagram.com/arteforhat", "_blank");
+      window.open("https://www.instagram.com/arte_forhat?igsh=MXhsazRhd3JkcTB5Mw==", "_blank");
     });
   }
 
@@ -164,7 +164,7 @@ function setupSocialLinks() {
   if (footerInstagram) {
     footerInstagram.addEventListener("click", (e) => {
       e.preventDefault();
-      window.open("https://www.instagram.com/arteforhat", "_blank");
+      window.open("https://www.instagram.com/arte_forhat?igsh=MXhsazRhd3JkcTB5Mw==", "_blank");
     });
   }
 
