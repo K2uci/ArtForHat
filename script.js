@@ -1,5 +1,5 @@
 // script.js - VERSIÓN OPTIMIZADA
-const WHATSAPP_NUMBER = "5359805123";
+const WHATSAPP_NUMBER = "5363168639";
 
 // Menu mobile
 const menuIcon = document.querySelector("#menu-icon");
