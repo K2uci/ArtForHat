@@ -1,5 +1,7 @@
-// script.js - VERSIÓN OPTIMIZADA
+// script.js - VERSIÓN CON 4 CATEGORÍAS
 const WHATSAPP_NUMBER = "5359805123";
+let categoriaActual = "pulseras";
+let productosData = null;
 
 // Menu mobile
 const menuIcon = document.querySelector("#menu-icon");
@@ -19,7 +21,7 @@ window.onscroll = () => {
   }
 };
 
-// Función optimizada para parsear nombres de archivo
+// Función para parsear nombres de archivo (formato: nombre_precio_tamaño.jpg)
 function parseFileName(fileName) {
   const sinExtension = fileName.replace(/\.[^/.]+$/, "");
   const partes = sinExtension.split("_");
@@ -38,8 +40,8 @@ function parseFileName(fileName) {
   };
 }
 
-// ✅ Función OPTIMIZADA - carga inmediata sin verificar cada imagen
-async function cargarProductos() {
+// Función para cargar productos de una categoría específica
+async function cargarProductosPorCategoria(categoriaId) {
   const container = document.getElementById("products-container");
   if (!container) return;
 
@@ -51,24 +53,35 @@ async function cargarProductos() {
   `;
 
   try {
-    const response = await fetch("./src/productos.json");
-
-    if (!response.ok) {
-      throw new Error(`No se pudo cargar productos.json`);
+    // Si aún no tenemos los datos, cargarlos
+    if (!productosData) {
+      const response = await fetch("./src/productos.json");
+      if (!response.ok) {
+        throw new Error("No se pudo cargar productos.json");
+      }
+      productosData = await response.json();
     }
 
-    const data = await response.json();
+    // Buscar la categoría seleccionada
+    const categoria = productosData.categorias.find(
+      (cat) => cat.id === categoriaId,
+    );
 
-    if (!data.imagenes || data.imagenes.length === 0) {
-      container.innerHTML = `<div class="loading-spinner"><p>📁 No hay productos en el catálogo</p></div>`;
+    if (!categoria || !categoria.imagenes || categoria.imagenes.length === 0) {
+      container.innerHTML = `
+        <div class="loading-spinner">
+          <p>📁 No hay productos en esta categoría</p>
+          <p style="font-size:0.9rem;">Pronto agregaremos más productos ✨</p>
+        </div>
+      `;
       return;
     }
 
     container.innerHTML = "";
 
-    // ✅ Carga DIRECTA sin verificación lenta
-    data.imagenes.forEach((imgNombre) => {
-      const imgPath = `./src/${imgNombre}`;
+    // Agregar productos de la categoría
+    categoria.imagenes.forEach((imgNombre) => {
+      const imgPath = `./src/${categoriaId}/${imgNombre}`;
       const { nombre, precio, tamaño } = parseFileName(imgNombre);
 
       const card = document.createElement("div");
@@ -109,10 +122,28 @@ async function cargarProductos() {
       <div class="loading-spinner">
         <p>❌ Error al cargar productos</p>
         <p style="font-size:0.9rem;">Verifica que el archivo <strong>src/productos.json</strong> tenga el formato correcto</p>
-        <button onclick="cargarProductos()" class="btn" style="margin-top:1rem;">🔄 Reintentar</button>
+        <button onclick="location.reload()" class="btn" style="margin-top:1rem;">🔄 Reintentar</button>
       </div>
     `;
   }
+}
+
+// Configurar tabs de categorías
+function setupCategoryTabs() {
+  const tabs = document.querySelectorAll(".tab-btn");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      // Actualizar clase activa en tabs
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Cargar productos de la categoría seleccionada
+      const categoryId = tab.getAttribute("data-category");
+      categoriaActual = categoryId;
+      cargarProductosPorCategoria(categoryId);
+    });
+  });
 }
 
 // Configurar botones de WhatsApp y redes sociales
@@ -210,6 +241,7 @@ window.addEventListener("scroll", () => {
 });
 
 // Inicializar
-cargarProductos();
+cargarProductosPorCategoria("pulseras");
+setupCategoryTabs();
 setupWhatsAppButtons();
 setupSocialLinks();

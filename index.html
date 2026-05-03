@@ -41,7 +41,17 @@
           <a href="#custom" class="btn btn-outline">Pedido Personalizado</a>
         </div>
       </div>
-      <!-- <div class="home-imgHover"></div> -->
+      <div class="home-img">
+        <img
+          src="./src/Amanecer_DonDavid_2500_32.jpg"
+          alt="Manos tejiendo"
+          class="tejiendo-img"
+          onerror="
+            this.src =
+              'https://placehold.co/500x400/ffcfb6/white?text=🧶+Tejiendo+con+amor'
+          "
+        />
+      </div>
     </section>
 
     <section class="about" id="about">
@@ -61,14 +71,35 @@
             talla y diseño, y lo tejemos especialmente para vos.
           </p>
         </div>
-        <div class="about-deco">
-          <!-- <div class="yarn-ball"></div> -->
+        <div class="about-img">
+          <img
+            src="https://images.pexels.com/photos/787629/pexels-photo-787629.jpeg?auto=compress&cs=tinysrgb&w=600"
+            alt="Manos tejiendo circular"
+            class="circular-img"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/ffcfb6/white?text=🧶+Tejiendo'
+            "
+          />
         </div>
       </div>
     </section>
 
     <section class="products" id="products">
       <h2 class="heading">✨ <span>Colección</span> destacada</h2>
+
+      <!-- CATEGORÍAS TABS -->
+      <div class="categories-tabs" id="categoriesTabs">
+        <button class="tab-btn active" data-category="pulseras">
+          📿 Pulseras
+        </button>
+        <button class="tab-btn" data-category="llaveros">🔑 Llaveros</button>
+        <button class="tab-btn" data-category="marcadores">
+          📖 Marcadores de Libros
+        </button>
+        <button class="tab-btn" data-category="crochet">🧶 Crochet</button>
+      </div>
+
       <div class="products-container" id="products-container">
         <div class="loading-spinner">
           <div class="spinner"></div>
@@ -82,8 +113,8 @@
         <div class="custom-icon">✏️</div>
         <h2>¿No encontraste lo que buscabas?</h2>
         <p>
-          Hacemos <strong>tejidos a medida</strong>: gorros, bufandas, mantas,
-          cuellos, conjuntos bebé, mantitas individuales y más.
+          Hacemos <strong>tejidos a medida</strong>: pulseras, llaveros,
+          marcadores de libros, crochet personalizado y más.
         </p>
         <p class="custom-highlight">
           💬 Envianos una foto de referencia o contanos tu idea.
