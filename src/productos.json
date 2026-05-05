@@ -18,7 +18,10 @@
     {
       "id": "crochet",
       "nombre": "🧶 Crochet",
-      "imagenes": ["Amanecer_DonDavid_2500_32.jpg", "Girasol_1500_5x10.jpg"]
+      "imagenes": [
+        "Amanecer_DonDavid_2500_32.jpg",
+        "Girasol_1500_5x10.jpg"
+      ]
     }
   ]
 }
