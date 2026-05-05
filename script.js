@@ -217,7 +217,7 @@ function setupSocialLinks() {
   if (footerEmail) {
     footerEmail.addEventListener("click", (e) => {
       e.preventDefault();
-      window.location.href = "mailto:arteforhat@gmail.com";
+      window.location.href = "mailto: patriciafaureforhat.com";
     });
   }
 }
