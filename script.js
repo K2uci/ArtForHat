@@ -1,6 +1,6 @@
 // script.js - VERSIÓN CON 4 CATEGORÍAS
 const WHATSAPP_NUMBER = "5363168639";
-let categoriaActual = "pulseras";
+let categoriaActual = "pulsera";
 let productosData = null;
 
 // Menu mobile
