@@ -3,12 +3,12 @@
     {
       "id": "pulseras",
       "nombre": "📿 Pulseras",
-      "imagenes": []
+      "imagenes": ["Flechitas_330_2x16.jpg"]
     },
     {
       "id": "llaveros",
       "nombre": "🔑 Llaveros",
-      "imagenes": ["Regalo_DonDavid_6500_15.jpg"]
+      "imagenes": ["Llavero_340_6x3.jpg"]
     },
     {
       "id": "marcadores",
