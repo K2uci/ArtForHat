@@ -1,5 +1,5 @@
 // script.js - VERSIÓN CON 4 CATEGORÍAS
-const WHATSAPP_NUMBER = "5359805123";
+const WHATSAPP_NUMBER = "5363168639";
 let categoriaActual = "pulseras";
 let productosData = null;
 
@@ -209,7 +209,7 @@ function setupSocialLinks() {
   if (emailLink) {
     emailLink.addEventListener("click", (e) => {
       e.preventDefault();
-      window.location.href = "mailto:arteforhat@gmail.com";
+      window.location.href = "mailto: patriciafaureforhat@gmail.com";
     });
   }
 
